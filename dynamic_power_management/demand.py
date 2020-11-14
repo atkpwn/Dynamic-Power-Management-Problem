@@ -20,7 +20,8 @@ class DemandProfile:
         return len(self.D)
 
     def __iter__(self):
-        return iter(self.D)
+        for k in range(len(self.D)):
+            yield k + 1
 
     def __getitem__(self, k):
         return self.D[k], (self.T[k + 1] - self.T[k])

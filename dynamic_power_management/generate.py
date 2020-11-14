@@ -17,10 +17,9 @@ def generate_server_types(number_of_types, m, sigma):
     return server_types
 
 
-def generate_demand_profile(n, maximum_demands):
+def generate_demand_profile(n, maximum_demands, max_length=1000):
     D = [randint(0, maximum_demands) for _ in range(n)]
-    T = [randint(1, 100) for _ in range(n)]
-    T = [0] + [randint(1, 1000) for _ in range(n)]
+    T = [0] + [randint(1, max_length) for _ in range(n)]
     for k in range(2, len(T)):
         T[k] += T[k - 1]
     return DemandProfile(T, D)

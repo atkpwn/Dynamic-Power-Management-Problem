@@ -12,28 +12,28 @@ class Schedule:
         }
         self._energy = None
 
-    def _calculate_energy(self):
-        self._energy = 0
-        for i, s in self.server_types.items():
-            for k in self.demand_profile:
-                mu = self._schedule[i, k][0]
-                for j in range(s.sigma + 1):
-                    previous = self._schedule.get((i, k - 1), {}).get(j, 0)
-                    up = min(mu, previous)
-                    self._energy += up * s[j].power_up_energy
-                    mu = mu - up
-                    assert mu >= 0
-                for j in range(s.sigma + 1):
-                    consumption = s[j].rate * \
-                        (self.demand_profile.t[k + 1] -
-                         self.demand_profile.t[k])
-                    self._energy += self._schedule[i, k].get(j, 0) * \
-                        consumption
-
     @property
     def total_energy(self):
+        def _calculate_energy():
+            self._energy = 0
+            for i, s in self.server_types.items():
+                for k in self.demand_profile:
+                    mu = self._schedule[i, k][0]
+                    for j in range(s.sigma + 1):
+                        previous = self._schedule.get((i, k - 1), {}).get(j, 0)
+                        up = min(mu, previous)
+                        self._energy += up * s[j].power_up_energy
+                        mu = mu - up
+                        assert mu >= 0
+                    for j in range(s.sigma + 1):
+                        consumption = s[j].rate * \
+                            (self.demand_profile.t[k + 1] -
+                             self.demand_profile.t[k])
+                        self._energy += self._schedule[i, k].get(j, 0) * \
+                            consumption
+
         if not self._energy:
-            self._calculate_energy()
+            _calculate_energy()
         return self._energy
 
     def reside(self, i, k, a, b, state):

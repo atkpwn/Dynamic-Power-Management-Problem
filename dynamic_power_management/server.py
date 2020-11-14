@@ -1,6 +1,6 @@
 class State:
 
-    displayed_precision = 6
+    __displayed_precision = 6
 
     def __init__(self, rate, power_up_energy):
         self.rate = rate
@@ -8,8 +8,8 @@ class State:
 
     def __repr__(self):
         template = (
-            f'<rate: {{:.{State.displayed_precision}f}}, '
-            f'power_up: {{:.{State.displayed_precision}f}}>'
+            f'<rate: {{:.{State.__displayed_precision}f}}, '
+            f'power_up: {{:.{State.__displayed_precision}f}}>'
         )
         return template.format(self.rate, self.power_up_energy)
 
