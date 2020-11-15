@@ -1,5 +1,23 @@
 class DemandProfile:
 
+    @staticmethod
+    def read(filename):
+        with open(filename) as f:
+            T = list(map(float, f.readline().split()))
+            D = list(map(int, f.readline().split()))
+        demand_profile = DemandProfile(T, D)
+        return demand_profile
+
+    @staticmethod
+    def write(filename, demand_profile):
+        with open(filename, 'w') as f:
+            for t in demand_profile.T.values():
+                f.write(f'{t} ')
+            f.write('\n')
+            for d in demand_profile.D.values():
+                f.write(f'{d} ')
+            f.write('\n')
+
     def __init__(self, T, D):
         assert type(T) == type(D) == list
         assert len(T) == len(D) + 1

@@ -15,6 +15,7 @@ Implementation of algorithms for DPM problem based on [this paper](https://dl.ac
 ### Examples
 * [generate_test.py](generate_test.py): Example of random generated test cases.
 * [set_cover_reduction.py](set_cover_reduction.py): Example of a reduction from set cover instance. This module provides `construct_server_types(number_of_elements, sets)` and `construct_demand_profile(number_of_elements)` which are used to create an DPM instance of a given set cover instance.
+* [experiment.py](experiment.py): Example of experimentation
 
 #### Usage
 ```shell
@@ -38,5 +39,5 @@ Approximation:      1786438111584
 
 ## Issues
 There are several concerns regarding this implementation:
-* Stability of fractional values. Sometimes
+* Stability of fractional values.
 * Large value exceed the limit of C long. This can happen when setting `sigma` too large, e.g., greater than 20.

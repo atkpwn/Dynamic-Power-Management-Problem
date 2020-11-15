@@ -2,9 +2,10 @@ from dynamic_power_management import Schedule
 
 from network import construct_network, u
 from solver.minimum_cost_flow_solver import MinimumCostTwoCommodityFlowSolver
+from solver.dpm_solver import DPMSolver, x
 
 
-def construct_schedule(server_types, demand_profile, network):
+def construct_schedule(server_types, demand_profile, d):
 
     def find_next_power_up(i, k):
         def energy(s, k, p):
@@ -19,15 +20,6 @@ def construct_schedule(server_types, demand_profile, network):
                            for j in range(1, server_types[i].sigma + 1))
                 return p, j
         return k - 1, server_types[i].sigma
-
-    # compute d[i, k]
-    tau = len(server_types)
-    d = {
-        # scale up the flow of commodity 1
-        (i, k): min(int(tau * network.edges[(u(i, k), u(i, k + 1))].flow1),
-                    server_types[i].m)
-        for k in demand_profile for i in server_types
-    }
 
     schedule = Schedule(server_types, demand_profile)
     for i in server_types:
@@ -54,7 +46,7 @@ def verify_flow(server_types, demand_profile, network, error=1e-12):
     )
 
 
-def flow_based_algorithm(server_types, demand_profile):
+def flow_based_algorithm(server_types, demand_profile, use_flow=True):
     '''
     >>> from set_cover_reduction import construct_server_types, construct_demand_profile
     >>> number_of_elements = 3
@@ -66,12 +58,28 @@ def flow_based_algorithm(server_types, demand_profile):
     167.0045222223457
     '''
     network = construct_network(server_types, demand_profile)
-    solver = MinimumCostTwoCommodityFlowSolver(network)
-    solver.silent()
-    flow_cost = solver.solve()
-    verify_flow(server_types, demand_profile, network)
-    schedule = construct_schedule(server_types, demand_profile, network)
-    return schedule, flow_cost
+    tau = len(server_types)
+    if use_flow:
+        solver = MinimumCostTwoCommodityFlowSolver(network)
+        solver.silent()
+        fractional_cost = solver.solve()
+        d = {
+            # scale up the flow of commodity 1
+            (i, k): min(int(tau * network.edges[(u(i, k), u(i, k + 1))].flow1),
+                        server_types[i].m)
+            for k in demand_profile for i in server_types
+        }
+    else:
+        solver = DPMSolver(server_types, demand_profile, variable_type='C')
+        solver.silent()
+        fractional_cost = solver.solve()
+        solution = solver.solution
+        d = {
+            (i, k): min(int(tau * solution[x(i, 0, k)]), server_types[i].m)
+            for k in demand_profile for i in server_types
+        }
+    schedule = construct_schedule(server_types, demand_profile, d)
+    return schedule, fractional_cost
 
 
 if __name__ == '__main__':
