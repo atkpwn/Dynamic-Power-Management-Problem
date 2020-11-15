@@ -15,11 +15,13 @@ def main():
     server_types = generate_server_types(
         number_of_types,
         number_of_servers_for_each_type,
-        sigma
+        sigma,
+        max_sigma=2*sigma
     )
     demand_profile = generate_demand_profile(
         number_of_time_steps,
-        maximum_demands
+        maximum_demands,
+        max_length=1000
     )
 
     solver = DPMSolver(server_types, demand_profile, variable_type='C')

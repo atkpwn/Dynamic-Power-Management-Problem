@@ -2,6 +2,7 @@ from dynamic_power_management import ServerType, DemandProfile
 from solver import DPMSolver, x
 from utility import ok, fail
 
+# EPS must be less than 2 / 3
 EPS = 0.0001
 
 

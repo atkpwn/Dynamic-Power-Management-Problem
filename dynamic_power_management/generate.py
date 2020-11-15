@@ -4,9 +4,9 @@ from .demand import DemandProfile
 from .server import ServerType
 
 
-def generate_server_types(number_of_types, m, sigma):
+def generate_server_types(number_of_types, m, sigma, max_sigma=20):
     server_types = {}
-    powers = [2**j for j in range(1, 2 * sigma)]
+    powers = [2**j for j in range(1, max_sigma)]
     for i in range(1, number_of_types + 1):
         rates = sorted(sample(powers, k=sigma), reverse=True) + [0]
         power_ups = [0] + sorted(sample(powers, k=sigma))

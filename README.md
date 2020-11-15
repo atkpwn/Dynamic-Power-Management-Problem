@@ -7,8 +7,8 @@ Implementation of algorithms for DPM problem based on [this paper](https://dl.ac
 
 ## Files and Folders
 ### Algorithm Implementation
-* [algorithm.py](algorithm.py): A main file of the implementation of the approximation algorithm
-* [network.py](network.py): Network construction step
+* [algorithm.py](algorithm.py): A main file of the implementation of the approximation algorithm. Function `flow_based_algorithm(server_types, demand_profile)` return a `schedule` object.
+* [network.py](network.py): Network construction step used in function `flow_based_algorithm`.
 * [solver](solver): Linear program solvers of the min-cost flow problem and DPM problem.
 * [utility](utility): Implementation of graph and other utility functions.
 
@@ -35,3 +35,8 @@ Integral optimum:   1373369579632.000000
 Flow cost:          1373369579632.0
 Approximation:      1786438111584
 ```
+
+## Issues
+There are several concerns regarding this implementation:
+* Stability of fractional values. Sometimes
+* Large value exceed the limit of C long. This can happen when setting `sigma` too large, e.g., greater than 20.
