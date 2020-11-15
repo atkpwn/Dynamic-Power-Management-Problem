@@ -32,14 +32,14 @@ def construct_schedule(server_types, demand_profile, network):
     schedule = Schedule(server_types, demand_profile)
     for i in server_types:
         for k in demand_profile:
-            schedule.reside(i, k, 1, d[i, k], 0)
+            schedule.reside(i, k, d[i, k], 0)
             mu = d[i, k]
             while mu < d.get((i, k - 1), 0):
                 # use p = k'
                 p, j = find_next_power_up(i, k)
                 new_mu = min(d[i, k - 1], d[i, p])
                 for q in range(k, p):
-                    schedule.reside(i, q, mu + 1, new_mu, j)
+                    schedule.reside(i, q, new_mu - mu, j)
                 mu = new_mu
 
     schedule.is_feasible()

@@ -36,15 +36,14 @@ class Schedule:
             _calculate_energy()
         return self._energy
 
-    def reside(self, i, k, a, b, state):
+    def reside(self, i, k, num, state):
         '''
         Schedule server type i number a to b to "state" at k
         '''
-        num = b - a + 1
         s = self.server_types[i]
         assert num <= self._schedule[i, k][s.sigma]
         self._schedule[i, k][s.sigma] -= num
-        self._schedule[i, k][state] = num
+        self._schedule[i, k][state] = self._schedule[i, k].get(state, 0) + num
 
     def __len__(self):
         return len(self.demand_profile)
